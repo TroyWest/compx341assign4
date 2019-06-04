@@ -21,6 +21,29 @@ def hello():
 	count = get_hit_count()
 	return 'Hello World! I have been seen {} times.\n'.format(count)
 
-@app.route('/isprime/<number>')
+@app.route('/isPrime/<number>')
 def isPrime(number):
-	return 'Is Prime Works! Number is {}'.format(number)
+	prime = True
+	n = int(number)
+	if n < 2 :
+		prime = False
+	else:
+		if n == 2 or n == 3:
+			prime = True
+		elif (n % 2) == 0:
+			prime = False
+		else:
+			for x in range(5, int(n/2)):
+				if (n % x) == 0:
+					prime = False
+		
+	if prime:
+		cache.rpush('primes', n)
+		return '{} is prime'.format(number)
+	else: 
+		return '{} is not prime'.format(number)
+
+@app.route('/primesStored')
+def displayStoredPrimes():
+	primes = cache.lrange('primes', -100, 100)
+	return "This works!{}".format(primes)
