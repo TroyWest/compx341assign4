@@ -1,2 +1,0 @@
-timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
-1559628042092,6,HTTP Request - Hello service,200,OK,Set Up Functional Test Thread Group 1-1,text,true,,194,116,1,1,http://127.0.0.1:22566/,6,0,1

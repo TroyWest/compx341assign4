@@ -1,6 +1,7 @@
 import time
 import redis
 from flask import Flask
+from math import sqrt
 
 app = Flask(__name__)
 cache = redis.Redis(host='redis', port=6379)
@@ -33,17 +34,28 @@ def isPrime(number):
 		elif (n % 2) == 0:
 			prime = False
 		else:
-			for x in range(5, int(n/2)):
+			for x in range(3, int(sqrt(n))):
 				if (n % x) == 0:
 					prime = False
 		
 	if prime:
-		cache.rpush('primes', n)
+		primes = cache.lrange('primes', 0, -1)
+		primes.sort()
+		exists = False		
+		for num in primes:			
+			if int(num) == n:
+				exists = True				
+		if exists == False:
+			cache.rpush('primes', n)
 		return '{} is prime'.format(number)
 	else: 
 		return '{} is not prime'.format(number)
 
 @app.route('/primesStored')
 def displayStoredPrimes():
-	primes = cache.lrange('primes', -100, 100)
-	return "This works!{}".format(primes)
+	cachedPrimes = cache.lrange('primes', 0, -1)
+	primes = []
+	for num in cachedPrimes:
+		primes.append(int(num))
+	primes.sort()
+	return "{}".format(primes)
